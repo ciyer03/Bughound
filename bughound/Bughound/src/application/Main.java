@@ -1,30 +1,30 @@
 package application;
-	
+
 import javafx.application.Application;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
-import javafx.fxml.FXMLLoader;
-
+import javafx.stage.Stage;
 
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			HBox root = (HBox)FXMLLoader.load(getClass().getClassLoader().getResource("view/Main.fxml"));
+			// set up the HBox as stated in view/Main.fxml, which is the homepage.
+			HBox root = (HBox) FXMLLoader.load(getClass().getClassLoader().getResource("view/Main.fxml"));
+
+			// set up the scene from the HBox root
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getClassLoader().getResource("css/application.css").toExternalForm());
+
+			// Set the scene and present the scene on the screen
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			
-			
-			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		launch(args);
+		launch(args); // launch the application
 	}
 }

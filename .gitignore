@@ -5,7 +5,7 @@
 bin/
 
 # User specific stuff
-.solarlint/
+.sonarlint/
 .mylyn/
 version.ini
 .lock
