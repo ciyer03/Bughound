@@ -4,6 +4,13 @@
 # bin folder in its entirety
 bin/
 
+# User specific stuff
+.solarlint/
+.mylyn/
+version.ini
+.lock
+.plugins/
+
 # Log file
 *.log
 
