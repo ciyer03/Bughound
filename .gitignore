@@ -10,6 +10,7 @@ bin/
 version.ini
 .lock
 .plugins/
+.DS_Store
 
 # Log file
 *.log
