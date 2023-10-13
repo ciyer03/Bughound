@@ -24,6 +24,8 @@ public class MainController {
 
 			// Add the newly created anchor pane to the main HBox.
 			mainBox.getChildren().add(pane1);
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
