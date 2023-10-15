@@ -11,6 +11,11 @@ version.ini
 .lock
 .plugins/
 .DS_Store
+.project
+.settings/
+
+#Javadoc
+doc/
 
 # Log file
 *.log
