@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.Project;
-import application.database.DAL;
+import application.database.ProjectDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,14 +12,14 @@ public class DataModel {
 	
 	private static final DataModel instance = new DataModel();
 	private ObservableList<Project> projects;
-	private DAL db;
+	private ProjectDatabase db;
 
 	/**
 	 * Instantiates a new data model.
 	 */
 	private DataModel() {
 		this.projects = FXCollections.observableArrayList();
-		this.db = new DAL();
+		this.db = new ProjectDatabase();
 	}
 	
 	/**

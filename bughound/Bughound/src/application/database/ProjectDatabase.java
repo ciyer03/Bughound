@@ -15,14 +15,14 @@ import application.Project;
 /**
  * The Data Access Layer (aptly named DAL) which handles all communication to and from the SQLite database.
  */
-public class DAL {
+public class ProjectDatabase {
 	private Connection connection;
 	private static final String URL = "jdbc:sqlite:data/projects.sqlite";
 
 	/**
 	 * Creates a DAL object to interact with the database.
 	 */
-	public DAL() {
+	public ProjectDatabase() {
 		try {
 			this.connection = DriverManager.getConnection(URL); // Connects to the local database.
 		} catch (SQLException e) {
