@@ -32,29 +32,23 @@ import javafx.stage.Stage;
  * Handles the events that occur on the Project Creation page.
  */
 public class ProjectController implements Initializable {
+
 	@FXML
 	private Stage stage;
 	private Scene scene;
 	private Parent root;
-	
 	@FXML
 	private TableView<Project> projectTable;
-	
 	@FXML
 	private TableColumn<Project, Date> projectDate;
-	
 	@FXML
 	private TableColumn<Project, String> projectDescription;
-	
 	@FXML
 	private TableColumn<Project, String> projectName;
-	
 	@FXML
 	private TextField projectNameField;
-	
 	@FXML
 	private DatePicker projectDateField;
-	
 	@FXML
 	private TextArea projectDescriptionField;
 	private ObservableList<Project> projects = FXCollections.observableArrayList();
@@ -62,7 +56,7 @@ public class ProjectController implements Initializable {
 	/**
 	 * Initialize the "Create Project" page.
 	 *
-	 * @param url the url of the page
+	 * @param url      the url of the page
 	 * @param resource the resource bundles required.
 	 */
 	@Override
@@ -79,22 +73,23 @@ public class ProjectController implements Initializable {
 	}
 
 	/**
-	 * Creates the project with the user supplied information on the textboxes, to the database.
+	 * Creates the project with the user supplied information on the textboxes, to
+	 * the database.
 	 *
 	 * @param event the event that should occur.
 	 */
 	@FXML
-	void handleSubmitProject(ActionEvent event) {
+	private void handleSubmitProject(ActionEvent event) {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Missing Input");
 		alert.setHeaderText(null);
 		alert.setContentText("Please fill out the required fields.");
-		
+
 		if (this.projectNameField.getText().isEmpty() || this.projectDateField.getValue() == null) {
 			alert.showAndWait();
 			return;
 		}
-		
+
 		Project project = new Project(this.projectNameField.getText(), this.projectDateField.getValue(),
 				this.projectDescriptionField.getText());
 		this.projects = this.projectTable.getItems();
@@ -104,7 +99,55 @@ public class ProjectController implements Initializable {
 		this.projectDateField.setValue(LocalDate.now());
 		this.projectDescriptionField.clear();
 		DataModel.getInstance().getProjects().add(project);
-		DataModel.getInstance().toDB(project);
+
+		if (DataModel.getInstance().addToDB(project) > 0) {
+			Alert successAlert = new Alert(AlertType.INFORMATION);
+			successAlert.setTitle("Success");
+			successAlert.setHeaderText(null);
+			successAlert.setContentText("Successfully added " + project.getName());
+			successAlert.showAndWait();
+			return;
+		}
+
+		Alert failureAlert = new Alert(AlertType.ERROR);
+		failureAlert.setTitle("Failure");
+		failureAlert.setHeaderText(null);
+		failureAlert.setContentText("Failed to add " + project.getName());
+		failureAlert.showAndWait();
+	}
+
+	/**
+	 * Removes the selected project.
+	 *
+	 * @param event the event that should occur.
+	 */
+	@FXML
+	private void handleRemoveProject(ActionEvent event) {
+		int selectedID = this.projectTable.getSelectionModel().getSelectedIndex();
+		if (selectedID == -1) {
+			Alert noProjectAlert = new Alert(AlertType.INFORMATION);
+			noProjectAlert.setTitle("No Projects");
+			noProjectAlert.setHeaderText(null);
+			noProjectAlert.setContentText("There are no projects!");
+			noProjectAlert.showAndWait();
+			return;
+		}
+		this.projectTable.getItems().remove(selectedID);
+		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
+		if (DataModel.getInstance().removeFromDB(removedProject) > 0) {
+			Alert successAlert = new Alert(AlertType.INFORMATION);
+			successAlert.setTitle("Success");
+			successAlert.setHeaderText(null);
+			successAlert.setContentText("Successfully removed " + removedProject.getName());
+			successAlert.showAndWait();
+			return;
+		}
+
+		Alert failureAlert = new Alert(AlertType.ERROR);
+		failureAlert.setTitle("Failure");
+		failureAlert.setHeaderText(null);
+		failureAlert.setContentText("Failed to remove " + removedProject.getName());
+		failureAlert.showAndWait();
 	}
 
 	/**
@@ -113,7 +156,7 @@ public class ProjectController implements Initializable {
 	 * @param event the event that should occur.
 	 */
 	@FXML
-	void handleBack(ActionEvent event) {
+	private void handleBack(ActionEvent event) {
 		try {
 			this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Home.fxml"));
 			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -126,21 +169,4 @@ public class ProjectController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Removes the selected project.
-	 *
-	 * @param event the event that should occur.
-	 */
-	// TODO: Remove the project from the database as well.
-	@FXML
-	void handleRemoveProject(ActionEvent event) {
-		int selectedID = this.projectTable.getSelectionModel().getSelectedIndex();
-		if (selectedID == -1) {
-			return;
-		}
-		this.projectTable.getItems().remove(selectedID);
-		DataModel.getInstance().getProjects().remove(selectedID);
-	}
-
 }
