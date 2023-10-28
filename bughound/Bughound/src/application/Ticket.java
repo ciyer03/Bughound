@@ -1,18 +1,23 @@
 package application;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Class Ticket.
  */
 public class Ticket {
+
+	/** The parent project. */
 	private Project parentProject;
+
+	/** The issue name. */
 	private String issueName;
+
+	/** The description. */
 	private String description;
+
+	/** The date of creation. */
 	private LocalDate dateOfCreation;
-	private ArrayList<Comment> comments;
 
 	/**
 	 * Instantiates a new ticket.
@@ -27,7 +32,6 @@ public class Ticket {
 		this.issueName = issueName;
 		this.description = description;
 		this.dateOfCreation = dateOfCreation;
-		this.comments = new ArrayList<>();
 	}
 
 	/**
@@ -82,14 +86,5 @@ public class Ticket {
 	 */
 	public LocalDate getDateOfCreation() {
 		return this.dateOfCreation;
-	}
-	
-	/**
-	 * Returns all comments added for this ticket.
-	 * 
-	 * @return all comments added for this ticket.
-	 */
-	public List<Comment> getComments() {
-		return this.comments;
 	}
 }

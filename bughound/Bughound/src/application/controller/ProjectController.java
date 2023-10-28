@@ -125,13 +125,9 @@ public class ProjectController implements Initializable {
 	private void handleRemoveProject(ActionEvent event) {
 		int selectedID = this.projectTable.getSelectionModel().getSelectedIndex();
 		if (selectedID == -1) {
-			Alert noProjectAlert = new Alert(AlertType.INFORMATION);
-			noProjectAlert.setTitle("No Projects");
-			noProjectAlert.setHeaderText(null);
-			noProjectAlert.setContentText("There are no projects!");
-			noProjectAlert.showAndWait();
 			return;
 		}
+		
 		this.projectTable.getItems().remove(selectedID);
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
 		if (DataModel.getInstance().removeProjectFromDB(removedProject) > 0) {

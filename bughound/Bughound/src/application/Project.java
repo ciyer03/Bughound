@@ -1,18 +1,21 @@
 package application;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines an object of Project that will be used to track bugs for different
  * projects.
  */
 public class Project {
+
+	/** The name. */
 	private String name;
+
+	/** The description. */
 	private String description;
+
+	/** The date. */
 	private LocalDate date;
-	private ArrayList<Ticket> tickets;
 
 	/**
 	 * Creates a new Project object that represents a real life project.
@@ -25,7 +28,6 @@ public class Project {
 		this.name = name;
 		this.description = description;
 		this.date = date;
-		this.tickets = new ArrayList<>();
 	}
 
 	/**
@@ -80,14 +82,5 @@ public class Project {
 	 */
 	public void setDate(LocalDate date) {
 		this.date = date;
-	}
-	
-	/**
-	 * Returns all the tickets filed for the project
-	 * 
-	 * @return all the tickets filed for the project
-	 */
-	public List<Ticket> getTickets() {
-		return this.tickets;
 	}
 }
