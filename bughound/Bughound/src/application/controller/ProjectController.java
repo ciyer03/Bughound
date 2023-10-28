@@ -100,20 +100,15 @@ public class ProjectController implements Initializable {
 		this.projectDescriptionField.clear();
 		DataModel.getInstance().getProjects().add(project);
 
-		if (DataModel.getInstance().addProjectToDB(project) > 0) {
-			Alert successAlert = new Alert(AlertType.INFORMATION);
-			successAlert.setTitle("Success");
-			successAlert.setHeaderText(null);
-			successAlert.setContentText("Successfully added " + project.getName());
-			successAlert.showAndWait();
-			return;
+		if (DataModel.getInstance().addProjectToDB(project) < 0) {
+			Alert failureAlert = new Alert(AlertType.ERROR);
+			failureAlert.setTitle("Failure");
+			failureAlert.setHeaderText(null);
+			failureAlert.setContentText("Failed to add " + project.getName());
+			failureAlert.showAndWait();
 		}
 
-		Alert failureAlert = new Alert(AlertType.ERROR);
-		failureAlert.setTitle("Failure");
-		failureAlert.setHeaderText(null);
-		failureAlert.setContentText("Failed to add " + project.getName());
-		failureAlert.showAndWait();
+		
 	}
 
 	/**
@@ -130,20 +125,14 @@ public class ProjectController implements Initializable {
 		
 		this.projectTable.getItems().remove(selectedID);
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
-		if (DataModel.getInstance().removeProjectFromDB(removedProject) > 0) {
-			Alert successAlert = new Alert(AlertType.INFORMATION);
-			successAlert.setTitle("Success");
-			successAlert.setHeaderText(null);
-			successAlert.setContentText("Successfully removed " + removedProject.getName());
-			successAlert.showAndWait();
-			return;
+		if (DataModel.getInstance().removeProjectFromDB(removedProject) < 0) {
+			Alert failureAlert = new Alert(AlertType.ERROR);
+			failureAlert.setTitle("Failure");
+			failureAlert.setHeaderText(null);
+			failureAlert.setContentText("Failed to remove " + removedProject.getName());
+			failureAlert.showAndWait();
 		}
 
-		Alert failureAlert = new Alert(AlertType.ERROR);
-		failureAlert.setTitle("Failure");
-		failureAlert.setHeaderText(null);
-		failureAlert.setContentText("Failed to remove " + removedProject.getName());
-		failureAlert.showAndWait();
 	}
 
 	/**
