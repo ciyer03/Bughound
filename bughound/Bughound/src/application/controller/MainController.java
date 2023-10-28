@@ -56,4 +56,19 @@ public class MainController {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+	void handleCreateTicket(ActionEvent event) {
+		try {
+			this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Ticket.fxml"));
+			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			this.scene = new Scene(this.root);
+			this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+			this.stage.setScene(this.scene);
+			this.stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
