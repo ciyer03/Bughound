@@ -6,21 +6,27 @@ import java.time.LocalDateTime;
  * The Class Comment.
  */
 public class Comment {
+
+	/** The parent ticket. */
 	private Ticket parentTicket;
+
+	/** The description. */
 	private String description;
-	private LocalDateTime timeOfCreation;
+
+	/** The timestamp. */
+	private LocalDateTime timestamp;
 
 	/**
 	 * Instantiates a new comment.
 	 *
-	 * @param parentTicket   the parent ticket
-	 * @param description    the description
-	 * @param timeOfCreation the time of creation
+	 * @param parentTicket the parent ticket
+	 * @param description  the description
+	 * @param timeofCreation the timeof creation
 	 */
-	public Comment(Ticket parentTicket, String description, LocalDateTime timeOfCreation) {
+	public Comment(Ticket parentTicket, String description, LocalDateTime timeofCreation) {
 		this.parentTicket = parentTicket;
 		this.description = description;
-		this.timeOfCreation = timeOfCreation;
+		this.timestamp = timeofCreation;
 	}
 
 	/**
@@ -55,8 +61,8 @@ public class Comment {
 	 *
 	 * @return the time of creation
 	 */
-	public LocalDateTime getTimeOfCreation() {
-		return this.timeOfCreation;
+	public LocalDateTime getTimestamp() {
+		return this.timestamp;
 	}
 
 	/**
@@ -64,7 +70,7 @@ public class Comment {
 	 *
 	 * @param timeOfCreation the new time of creation
 	 */
-	public void setTimeOfCreation(LocalDateTime timeOfCreation) {
-		this.timeOfCreation = timeOfCreation;
+	public void setTimestamp(LocalDateTime timeOfCreation) {
+		this.timestamp = timeOfCreation;
 	}
 }

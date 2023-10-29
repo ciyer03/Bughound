@@ -33,24 +33,45 @@ import javafx.stage.Stage;
  */
 public class ProjectController implements Initializable {
 
+	/** The stage. */
 	@FXML
 	private Stage stage;
+	
+	/** The scene. */
 	private Scene scene;
+	
+	/** The root. */
 	private Parent root;
+	
+	/** The project table. */
 	@FXML
 	private TableView<Project> projectTable;
+	
+	/** The project date. */
 	@FXML
 	private TableColumn<Project, Date> projectDate;
+	
+	/** The project description. */
 	@FXML
 	private TableColumn<Project, String> projectDescription;
+	
+	/** The project name. */
 	@FXML
 	private TableColumn<Project, String> projectName;
+	
+	/** The project name field. */
 	@FXML
 	private TextField projectNameField;
+	
+	/** The project date field. */
 	@FXML
 	private DatePicker projectDateField;
+	
+	/** The project description field. */
 	@FXML
 	private TextArea projectDescriptionField;
+	
+	/** The projects. */
 	private ObservableList<Project> projects = FXCollections.observableArrayList();
 
 	/**
@@ -107,8 +128,6 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to add " + project.getName());
 			failureAlert.showAndWait();
 		}
-
-		
 	}
 
 	/**
@@ -122,9 +141,10 @@ public class ProjectController implements Initializable {
 		if (selectedID == -1) {
 			return;
 		}
-		
+
 		this.projectTable.getItems().remove(selectedID);
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
+		this.projects.remove(removedProject);
 		if (DataModel.getInstance().removeProjectFromDB(removedProject) < 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
@@ -132,7 +152,6 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to remove " + removedProject.getName());
 			failureAlert.showAndWait();
 		}
-
 	}
 
 	/**

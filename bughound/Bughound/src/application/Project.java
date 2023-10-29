@@ -83,4 +83,14 @@ public class Project {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 }

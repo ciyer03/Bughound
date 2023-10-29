@@ -11,10 +11,23 @@ import javafx.collections.ObservableList;
  * Tracks and keeps a record of created projects.
  */
 public class DataModel {
+	
+	/** The Constant instance. */
 	private static final DataModel instance = new DataModel();
+	
+	/** The projects. */
 	private ObservableList<Project> projects;
+	
+	/** The tickets. */
 	private ObservableList<Ticket> tickets;
+	
+	/** The comments. */
 	private ObservableList<Comment> comments;
+	
+	/** The selected ticket. */
+	private Ticket selectedTicket;
+	
+	/** The db. */
 	private ProjectDatabase db;
 
 	/**
@@ -25,6 +38,7 @@ public class DataModel {
 		this.tickets = FXCollections.observableArrayList();
 		this.comments = FXCollections.observableArrayList();
 		this.db = new ProjectDatabase();
+		this.selectedTicket = null;
 	}
 
 	/**
@@ -132,5 +146,23 @@ public class DataModel {
 	public ObservableList<Comment> getComments(Ticket parentTicket) {
 		this.comments = FXCollections.observableArrayList(this.db.getComments(parentTicket));
 		return this.comments;
+	}
+
+	/**
+	 * Gets the ticket.
+	 *
+	 * @return the ticket
+	 */
+	public Ticket getTicket() {
+		return this.selectedTicket;
+	}
+
+	/**
+	 * Sets the ticket.
+	 *
+	 * @param ticket the new ticket
+	 */
+	public void setTicket(Ticket ticket) {
+		this.selectedTicket = ticket;
 	}
 }

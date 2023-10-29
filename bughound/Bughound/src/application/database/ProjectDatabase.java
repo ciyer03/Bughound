@@ -60,7 +60,7 @@ public class ProjectDatabase {
 			// The Project database will have an id, name, a date, and a description field,
 			// corresponding to each project.
 			String projectTable = "CREATE TABLE IF NOT EXISTS projects (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-					+ "name TEXT NOT NULL PRIMARY KEY, " + "date TEXT NOT NULL," + "description TEXT" + ")";
+					+ "name TEXT NOT NULL, " + "date TEXT NOT NULL," + "description TEXT" + ")";
 
 			// The Ticket database will have an id, parent_project_id, issue_name, date,
 			// description, and an association key.
@@ -197,7 +197,7 @@ public class ProjectDatabase {
 			sm = this.connection.prepareStatement(insertComment); // Prepare to insert.
 			sm.setInt(1, this.getTicketID(comment.getParentTicket()));
 			sm.setString(2, comment.getDescription());
-			sm.setString(3, comment.getTimeOfCreation().toString());
+			sm.setString(3, comment.getTimestamp().toString());
 
 			status = sm.executeUpdate(); // Insert the Comment with the given details into the database.
 		} catch (SQLException e) {
@@ -230,16 +230,20 @@ public class ProjectDatabase {
 		int status = 0;
 
 		try {
+			if (this.removeAllTickets(project) < 0) {
+				System.out.println("Failed to remove Tickets for the Project " + project.getName());
+			}
 			// Criterion for the data to be deleted from the database.
 			String removeProject = "DELETE FROM projects WHERE name = ? AND date = ? AND description = ?";
 
+			this.openConnection();
 			// Set values for the database.
 			sm = this.connection.prepareStatement(removeProject); // Prepare to insert.
 			sm.setString(1, project.getName());
 			sm.setString(2, project.getDate().toString());
 			sm.setString(3, project.getDescription());
 
-			status = sm.executeUpdate(); // Remove the project with the given details into the database.
+			status = sm.executeUpdate(); // Remove the Project with the given details from the database.
 		} catch (SQLException e) {
 			e.printStackTrace();
 			this.closeConnection(); // Close the connection to the database if there's an error.
@@ -270,9 +274,13 @@ public class ProjectDatabase {
 		int status = 0;
 
 		try {
+			if (this.removeAllComments(ticket) < 0) {
+				System.out.println("Failed to remove comments for Ticket " + ticket.getIssueName());
+			}
 			// Criterion for the data to be deleted from the database.
 			String removeTicket = "DELETE FROM tickets WHERE id = ? AND parent_project_id = ? AND issue_name = ? AND date = ? AND description = ?";
 
+			this.openConnection();
 			// Set values for the database.
 			sm = this.connection.prepareStatement(removeTicket); // Prepare to insert.
 			sm.setInt(1, this.getTicketID(ticket));
@@ -281,7 +289,7 @@ public class ProjectDatabase {
 			sm.setString(4, ticket.getDateOfCreation().toString());
 			sm.setString(5, ticket.getDescription());
 
-			status = sm.executeUpdate(); // Remove the Ticket with the given details into the database.
+			status = sm.executeUpdate(); // Remove the Ticket with the given details from the database.
 		} catch (SQLException e) {
 			e.printStackTrace();
 			this.closeConnection(); // Close the connection to the database if there's an error.
@@ -320,9 +328,9 @@ public class ProjectDatabase {
 			sm.setInt(1, this.getCommentID(comment));
 			sm.setInt(2, this.getTicketID(comment.getParentTicket()));
 			sm.setString(3, comment.getDescription());
-			sm.setString(4, comment.getTimeOfCreation().toString());
+			sm.setString(4, comment.getTimestamp().toString());
 
-			status = sm.executeUpdate(); // Remove the Comment with the given details into the database.
+			status = sm.executeUpdate(); // Remove the Comment with the given details from the database.
 		} catch (SQLException e) {
 			e.printStackTrace();
 			this.closeConnection(); // Close the connection to the database if there's an error.
@@ -341,13 +349,101 @@ public class ProjectDatabase {
 	}
 
 	/**
+	 * Removes all the Tickets lodged for the given Project.
+	 *
+	 * @param parentProject the parent project whose Tickets to remove
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	private int removeAllTickets(Project parentProject) {
+		PreparedStatement sm = null;
+		int status = 0;
+		ArrayList<Ticket> allTickets = new ArrayList<>(this.getTickets(parentProject));
+
+		try {
+			if (allTickets.isEmpty()) {
+				return 1;
+			}
+
+			for (Ticket ticket : allTickets) {
+				if (this.removeAllComments(ticket) < 0) {
+					System.out.println("Failed to remove comments for Ticket " + ticket.getIssueName());
+				}
+			}
+			// Criterion for the data to be deleted from the database.
+			String removeAllTicketsForProject = "DELETE FROM tickets WHERE parent_project_id = ?";
+
+			this.openConnection();
+			// Set values for the database.
+			sm = this.connection.prepareStatement(removeAllTicketsForProject); // Prepare to insert.
+			sm.setInt(1, this.getProjectID(parentProject));
+
+			status = sm.executeUpdate(); // Remove all the Tickets with the given details from the database.
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.closeConnection(); // Close the connection to the database if there's an error.
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				this.closeConnection(); // Close the connection to the database if there's an error.
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * Removes all the Comments lodged for the given Ticket.
+	 *
+	 * @param parentTicket the parent Ticket whose Comments to remove
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	private int removeAllComments(Ticket parentTicket) {
+		PreparedStatement sm = null;
+		int status = 0;
+		ArrayList<Comment> allComments = new ArrayList<>(this.getComments(parentTicket));
+
+		try {
+			if (allComments.isEmpty()) {
+				return 1;
+			}
+
+			// Criterion for the data to be deleted from the database.
+			String removeAllCommentsForTicket = "DELETE FROM comments WHERE parent_ticket_id = ?";
+
+			this.openConnection();
+			// Set values for the database.
+			sm = this.connection.prepareStatement(removeAllCommentsForTicket); // Prepare to insert.
+			sm.setInt(1, this.getTicketID(parentTicket));
+
+			status = sm.executeUpdate(); // Remove all the Comments with the given details from the database.
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.closeConnection(); // Close the connection to the database if there's an error.
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				this.closeConnection(); // Close the connection to the database if there's an error.
+			}
+		}
+		return status;
+	}
+
+	/**
 	 * Gets the project ID.
 	 *
 	 * @param project the Project whose ID to fetch
 	 * @return the project ID
 	 */
 	private int getProjectID(Project project) {
-		this.openConnection(); // Open the connection to the database.
 		PreparedStatement sm = null;
 		int projectID = 0;
 
@@ -373,7 +469,6 @@ public class ProjectDatabase {
 			if (sm != null) {
 				try {
 					sm.close();
-					this.closeConnection(); // Close the connection to the database after done using.
 				} catch (SQLException e) {
 					e.printStackTrace();
 					this.closeConnection(); // Close the connection to the database if there's an error.
@@ -390,7 +485,6 @@ public class ProjectDatabase {
 	 * @return the ticket ID
 	 */
 	private int getTicketID(Ticket ticket) {
-		this.openConnection(); // Open the connection to the database.
 		int ticketID = 0;
 		PreparedStatement sm = null;
 
@@ -416,7 +510,6 @@ public class ProjectDatabase {
 			try {
 				if (sm != null) {
 					sm.close();
-					this.closeConnection(); // Close the connection to the database after done using.
 				}
 			} catch (SQLException e2) {
 				e2.printStackTrace();
@@ -433,7 +526,6 @@ public class ProjectDatabase {
 	 * @return the comment ID
 	 */
 	private int getCommentID(Comment comment) {
-		this.openConnection(); // Open the connection to the database.
 		PreparedStatement sm = null;
 		int commentID = 0;
 
@@ -445,7 +537,7 @@ public class ProjectDatabase {
 			sm = this.connection.prepareStatement(fetchComment); // Prepare to insert.
 			sm.setInt(1, this.getTicketID(comment.getParentTicket()));
 			sm.setString(2, comment.getDescription());
-			sm.setString(3, comment.getTimeOfCreation().toString());
+			sm.setString(3, comment.getTimestamp().toString());
 
 			ResultSet resultSet = sm.executeQuery();
 			if (resultSet.next()) {
@@ -458,7 +550,6 @@ public class ProjectDatabase {
 			try {
 				if (sm != null) {
 					sm.close();
-					this.closeConnection(); // Close the connection to the database after done using.
 				}
 			} catch (SQLException e2) {
 				e2.printStackTrace();
@@ -587,7 +678,7 @@ public class ProjectDatabase {
 				// Retrieve and store the project information
 				String description = resultSet.getString("description");
 				String timestamp = resultSet.getString("date");
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 				LocalDateTime timeDate = LocalDateTime.parse(timestamp, formatter);
 
 				// Add the returned Comment to the to be returned list.
