@@ -86,6 +86,21 @@ public class TicketController implements Initializable {
         bugDescriptionField.clear();
         
     }
+    
+    @FXML
+    void handleAddComment(ActionEvent event) {
+    	try {
+    		this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Comment.fxml"));
+    		this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            this.scene = new Scene(this.root);
+            this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+            this.stage.setScene(this.scene);
+            this.stage.show();
+    	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
 
     @FXML
     void handleRemoveProject(ActionEvent event) {
@@ -114,5 +129,12 @@ public class TicketController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Passes Ticket Information
+     */
+    public void passTicket(Ticket selectedTicket) {
+    	selectedTicket = new Ticket(bugChoiceBox.getValue(), bugNameField.getText(), bugDescriptionField.getText(), LocalDate.now());
     }
 }
