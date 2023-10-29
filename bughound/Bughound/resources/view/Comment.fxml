@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -9,18 +8,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.CommentController">
+<AnchorPane xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.CommentController">
    <children>
       <AnchorPane layoutY="-6.0" prefHeight="480.0" prefWidth="854.0" style="-fx-background-color: #444444;">
          <children>
             <Label layoutX="125.0" layoutY="32.0" prefHeight="79.0" prefWidth="305.0" text="Add Comment" textFill="WHITE">
                <font>
                   <Font name="Consolas Bold" size="38.0" />
-               </font>
-            </Label>
-            <Label layoutX="45.0" layoutY="248.0" prefHeight="21.0" prefWidth="75.0" text="Timestamp:" textFill="WHITE">
-               <font>
-                  <Font size="15.0" />
                </font>
             </Label>
             <Label layoutX="43.0" layoutY="133.0" prefHeight="27.0" prefWidth="81.0" text="Comment " textFill="WHITE">
@@ -33,7 +27,7 @@
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="243.0" layoutY="322.0" mnemonicParsing="false" onAction="#handleSubmitComment" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Submit" textFill="WHITE">
+            <Button layoutX="243.0" layoutY="238.0" mnemonicParsing="false" onAction="#handleSubmitComment" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Submit" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
@@ -48,30 +42,18 @@
                   <Font size="34.0" />
                </font>
             </Label>
-            <Label layoutX="414.0" layoutY="238.0" prefHeight="50.0" prefWidth="15.0" text="*" textFill="#fec63d">
-               <font>
-                  <Font size="34.0" />
-               </font>
-            </Label>
-            <TextArea fx:id="commentDescriptionField" layoutX="146.0" layoutY="130.0" prefHeight="88.0" prefWidth="262.0" promptText="Enter bug description" />
+            <TextArea fx:id="commentDescriptionField" layoutX="146.0" layoutY="130.0" prefHeight="88.0" prefWidth="262.0" promptText="Enter comment" />
             <TableView fx:id="commentTable" layoutX="453.0" layoutY="7.0" prefHeight="436.0" prefWidth="410.0">
                <columns>
-                  <TableColumn fx:id="bugProjectName" prefWidth="120.0" text="Project" />
-                  <TableColumn fx:id="bugName" prefWidth="120.0" text="Name" />
-                  <TableColumn fx:id="commentDescription" prefWidth="173.0" text="Description" />
+                  <TableColumn fx:id="commentDescription" prefWidth="253.0" text="Description" />
+                  <TableColumn fx:id="timeStamp" prefWidth="156.0" text="Time" />
                </columns>
             </TableView>
-            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Open" textFill="WHITE">
+            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleRemoveComment" prefHeight="42.0" prefWidth="410.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Remove" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="658.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleRemoveProject" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Remove" textFill="WHITE">
-               <font>
-                  <Font name="Consolas" size="12.0" />
-               </font>
-            </Button>
-            <DatePicker fx:id="commentTimestamp" layoutX="145.0" layoutY="245.0" prefHeight="27.0" prefWidth="262.0" />
             <Label layoutX="43.0" layoutY="149.0" prefHeight="27.0" prefWidth="81.0" text="Description:" textFill="WHITE">
                <font>
                   <Font size="15.0" />

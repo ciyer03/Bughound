@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.TicketController">
+<AnchorPane xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.TicketController">
    <children>
       <AnchorPane layoutY="-6.0" prefHeight="480.0" prefWidth="854.0" style="-fx-background-color: #444444;">
          <children>
@@ -39,7 +39,7 @@
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="334.0" layoutY="349.0" mnemonicParsing="false" onAction="#handleSubmitTicket" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Submit" textFill="WHITE">
+            <Button layoutX="243.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleSubmitTicket" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Submit" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
@@ -69,17 +69,12 @@
                   <TableColumn fx:id="bugDescription" prefWidth="173.0" text="Description" />
                </columns>
             </TableView>
-            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Open" textFill="WHITE">
+            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleAddComment" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Open" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
             <Button layoutX="658.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleRemoveProject" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Remove" textFill="WHITE">
-               <font>
-                  <Font name="Consolas" size="12.0" />
-               </font>
-            </Button>
-            <Button layoutX="155.0" layoutY="349.0" mnemonicParsing="false" onAction="#handleAddComment" prefHeight="25.0" prefWidth="92.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Add Comment" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>

@@ -2,7 +2,6 @@ package application.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import application.Project;
 import application.Ticket;
 import application.Comment;
 import javafx.collections.FXCollections;
@@ -43,19 +42,16 @@ public class CommentController implements Initializable {
     @FXML
     private TableView<Comment> commentTable;
     @FXML
-    private TableColumn<Comment, Project> bugProjectName; 
-    @FXML
-    private TableColumn<Comment, String> bugName;
+    private TableColumn<Comment, LocalDateTime> timeStamp;
     @FXML
     private TableColumn<Comment, String> commentDescription;
     private ObservableList<Comment> comments = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        bugProjectName.setCellValueFactory(new PropertyValueFactory<Comment, Project>("parentProject"));
-        bugName.setCellValueFactory(new PropertyValueFactory<Comment, String>("issueName"));
-        commentDescription.setCellValueFactory(new PropertyValueFactory<Comment, String>("description")); //Need to change this to store comment description
-        VBox customPlaceholder = new VBox(new Label("No existing comments"));
+        timeStamp.setCellValueFactory(new PropertyValueFactory<Comment, LocalDateTime>("timeOfCreation"));
+        commentDescription.setCellValueFactory(new PropertyValueFactory<Comment, String>("description"));
+        VBox customPlaceholder = new VBox(new Label("No existing comments for this ticket"));
         customPlaceholder.setAlignment(Pos.CENTER);
         commentTable.setPlaceholder(customPlaceholder);
     }
@@ -67,15 +63,12 @@ public class CommentController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText("Please fill out the required fields.");
 
-        if (commentDescription.getText().isEmpty() || commentTimestamp.getValue() == null) {
+        if (commentDescriptionField.getText().isEmpty()) {
             alert.showAndWait();
             return;
         }
 		
-		Ticket ticket = null;
-		TicketController access = new TicketController();
-		access.passTicket(ticket);
-		
+        Ticket ticket = null;
         Comment comment = new Comment(ticket, commentDescriptionField.getText(), LocalDateTime.now());
         comments.add(comment);
         commentTable.setItems(comments);
@@ -84,7 +77,7 @@ public class CommentController implements Initializable {
     }
 
     @FXML
-    void handleRemoveProject(ActionEvent event) {
+    void handleRemoveComment(ActionEvent event) {
         int selectedID = commentTable.getSelectionModel().getSelectedIndex();
         if (selectedID == -1) {
             return;
