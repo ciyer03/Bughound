@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import application.Project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,26 +73,26 @@ public class ProjectController implements Initializable {
 	@FXML
 	private TextArea projectDescriptionField;
 	
+	/** The project search field. */
+	@FXML
+	private TextField searchProjects;
+	
 	/** The projects. */
 	private ObservableList<Project> projects = FXCollections.observableArrayList();
+	
+	/** The searched projects. */
+	private FilteredList<Project> filteredProjects;
 
 	/**
 	 * Initialize the "Create Project" page.
 	 *
-	 * @param url      the url of the page
+	 * @param url the url of the page
 	 * @param resource the resource bundles required.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resource) {
-		this.projectName.setCellValueFactory(new PropertyValueFactory<Project, String>("name"));
-		this.projectDate.setCellValueFactory(new PropertyValueFactory<Project, Date>("date"));
-		this.projectDescription.setCellValueFactory(new PropertyValueFactory<Project, String>("description"));
-		this.projectDateField.setValue(LocalDate.now());
-		VBox customPlaceholder = new VBox(new Label("No existing projects"));
-		customPlaceholder.setAlignment(Pos.CENTER);
-		this.projectTable.setPlaceholder(customPlaceholder);
-		this.projects.setAll(DataModel.getInstance().getProjects());
-		this.projectTable.setItems(this.projects);
+		updateTable();
+		searchProject();
 	}
 
 	/**
@@ -113,14 +115,12 @@ public class ProjectController implements Initializable {
 
 		Project project = new Project(this.projectNameField.getText(), this.projectDateField.getValue(),
 				this.projectDescriptionField.getText());
-		this.projects = this.projectTable.getItems();
+		DataModel.getInstance().getProjects().add(project);
 		this.projects.add(project);
-		this.projectTable.setItems(this.projects);
 		this.projectNameField.clear();
 		this.projectDateField.setValue(LocalDate.now());
 		this.projectDescriptionField.clear();
-		DataModel.getInstance().getProjects().add(project);
-
+		
 		if (DataModel.getInstance().addProjectToDB(project) < 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
@@ -128,6 +128,7 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to add " + project.getName());
 			failureAlert.showAndWait();
 		}
+		updateTable();
 	}
 
 	/**
@@ -141,8 +142,7 @@ public class ProjectController implements Initializable {
 		if (selectedID == -1) {
 			return;
 		}
-
-		this.projectTable.getItems().remove(selectedID);
+		
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
 		this.projects.remove(removedProject);
 		if (DataModel.getInstance().removeProjectFromDB(removedProject) < 0) {
@@ -152,8 +152,53 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to remove " + removedProject.getName());
 			failureAlert.showAndWait();
 		}
+		updateTable();
+	}
+	
+	/**
+	 * Searches projects table
+	 *
+	 */
+	@FXML
+	void searchProject() {
+		this.filteredProjects = new FilteredList<>(this.projects, b -> true);
+		searchProjects.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredProjects.setPredicate(project -> {
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				String lowerCaseFilter = newValue.toLowerCase();
+				if (project.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		SortedList<Project> sorted = new SortedList<>(filteredProjects);
+		sorted.comparatorProperty().bind(projectTable.comparatorProperty());
+		projectTable.setItems(sorted);
+	}
+	
+	/**
+	 * Updates projects table
+	 *
+	 */
+	@FXML
+	void updateTable() {
+		this.projectName.setCellValueFactory(new PropertyValueFactory<Project, String>("name"));
+		this.projectDate.setCellValueFactory(new PropertyValueFactory<Project, Date>("date"));
+		this.projectDescription.setCellValueFactory(new PropertyValueFactory<Project, String>("description"));
+		this.projectDateField.setValue(LocalDate.now());
+		VBox customPlaceholder = new VBox(new Label("No existing projects"));
+		customPlaceholder.setAlignment(Pos.CENTER);
+		this.projectTable.setPlaceholder(customPlaceholder);
+		this.projects.setAll(DataModel.getInstance().getProjects());
+		this.projectTable.setItems(this.projects);
 	}
 
+	
 	/**
 	 * Takes the user back to the homepage.
 	 *
@@ -173,4 +218,6 @@ public class ProjectController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }

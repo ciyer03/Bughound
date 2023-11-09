@@ -8,6 +8,8 @@ import application.Project;
 import application.Ticket;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,9 +72,16 @@ public class TicketController implements Initializable {
 	/** The bug description. */
 	@FXML
 	private TableColumn<Ticket, String> bugDescription;
+	
+	/** The bug search field */
+	@FXML
+	private TextField searchTickets;
 
 	/** The tickets. */
 	private ObservableList<Ticket> tickets = FXCollections.observableArrayList();
+	
+	/** The searched tickets. */
+	private FilteredList<Ticket> filteredTickets;
 
 	/**
 	 * Initialize.
@@ -91,12 +100,12 @@ public class TicketController implements Initializable {
 		VBox customPlaceholder = new VBox(new Label("No existing tickets"));
 		customPlaceholder.setAlignment(Pos.CENTER);
 		this.ticketTable.setPlaceholder(customPlaceholder);
-
 		this.bugChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
-				ObservableList<Ticket> projectTickets = dataModel.getTickets(newValue);
+				ObservableList<Ticket> projectTickets = DataModel.getInstance().getTickets(newValue);
 				this.tickets.setAll(projectTickets);
 				this.ticketTable.setItems(this.tickets);
+				searchTicket();
 			}
 		});
 	}
@@ -154,7 +163,6 @@ public class TicketController implements Initializable {
 					failureAlert.showAndWait();
 					return;
 				}
-
 				DataModel.getInstance().setTicket(selectedTicket);
 				this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Comment.fxml"));
 
@@ -178,7 +186,7 @@ public class TicketController implements Initializable {
 	}
 
 	/**
-	 * Handle remove project.
+	 * Handle remove ticket.
 	 *
 	 * @param event the event
 	 */
@@ -189,9 +197,7 @@ public class TicketController implements Initializable {
 			return;
 		}
 
-		Ticket removedTicket = this.ticketTable.getItems().remove(selectedID);
-		DataModel.getInstance().getTickets(removedTicket.getParentProject()).remove(removedTicket);
-		this.tickets.remove(removedTicket);
+		Ticket removedTicket = this.ticketTable.getItems().get(selectedID);
 		if (DataModel.getInstance().removeTicketFromDB(removedTicket) < 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
@@ -199,7 +205,36 @@ public class TicketController implements Initializable {
 			failureAlert.setContentText("Failed to remove " + removedTicket.getIssueName());
 			failureAlert.showAndWait();
 		}
+		this.tickets.remove(removedTicket);
+	    this.ticketTable.getItems().remove(removedTicket);
 	}
+	
+	/**
+	 * Handle search ticket.
+	 *
+	 */
+	@FXML
+	void searchTicket() {
+		this.filteredTickets = new FilteredList<>(this.tickets, b -> true);
+		searchTickets.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredTickets.setPredicate(ticket -> {
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				String lowerCaseFilter = newValue.toLowerCase();
+				if (ticket.getIssueName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		SortedList<Ticket> sorted = new SortedList<>(filteredTickets);
+		sorted.comparatorProperty().bind(ticketTable.comparatorProperty());
+		ticketTable.setItems(sorted);
+	}
+	
 
 	/**
 	 * Takes the user back to the homepage.
