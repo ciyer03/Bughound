@@ -143,7 +143,7 @@ public class TicketController implements Initializable {
 		this.ticketTable.setItems(this.tickets);
 		this.bugNameField.clear();
 		this.bugDescriptionField.clear();
-		this.searchTicket();
+		this.updateFilteredTickets();
 	}
 
 	/**
