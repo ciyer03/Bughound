@@ -18,32 +18,12 @@ public class MainController {
 	/** The stage. */
 	@FXML
 	private Stage stage;
-	
+
 	/** The scene. */
 	private Scene scene;
-	
+
 	/** The root. */
 	private Parent root;
-
-	/**
-	 * Gets the user back to the homepage of the application.
-	 *
-	 * @param event the event that should occur.
-	 */
-	@FXML
-	void handleBack(ActionEvent event) {
-		try {
-			this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Home.fxml"));
-			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			this.scene = new Scene(this.root);
-			this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
-			this.stage.setScene(this.scene);
-			this.stage.show();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Takes the user to the New Project Creation page.
@@ -51,7 +31,7 @@ public class MainController {
 	 * @param event the event that should occur.
 	 */
 	@FXML
-	void handleCreateProject(ActionEvent event) {
+	private void handleCreateProject(ActionEvent event) {
 		try {
 			this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Project.fxml"));
 			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -70,7 +50,7 @@ public class MainController {
 	 * @param event the event
 	 */
 	@FXML
-	void handleCreateTicket(ActionEvent event) {
+	private void handleCreateTicket(ActionEvent event) {
 		try {
 			if (!(DataModel.getInstance().getProjects().isEmpty())) {
 				this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Ticket.fxml"));

@@ -72,14 +72,14 @@ public class TicketController implements Initializable {
 	/** The bug description. */
 	@FXML
 	private TableColumn<Ticket, String> bugDescription;
-	
-	/** The bug search field */
+
+	/** The bug search field. */
 	@FXML
 	private TextField searchTickets;
 
 	/** The tickets. */
 	private ObservableList<Ticket> tickets = FXCollections.observableArrayList();
-	
+
 	/** The searched tickets. */
 	private FilteredList<Ticket> filteredTickets;
 
@@ -105,7 +105,7 @@ public class TicketController implements Initializable {
 				ObservableList<Ticket> projectTickets = DataModel.getInstance().getTickets(newValue);
 				this.tickets.setAll(projectTickets);
 				this.ticketTable.setItems(this.tickets);
-				searchTicket();
+				this.searchTicket();
 			}
 		});
 	}
@@ -116,7 +116,7 @@ public class TicketController implements Initializable {
 	 * @param event the event
 	 */
 	@FXML
-	void handleSubmitTicket(ActionEvent event) {
+	private void handleSubmitTicket(ActionEvent event) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Missing Input");
 		alert.setHeaderText(null);
@@ -151,7 +151,7 @@ public class TicketController implements Initializable {
 	 * @param event the event
 	 */
 	@FXML
-	void handleAddComment(ActionEvent event) {
+	private void handleAddComment(ActionEvent event) {
 		try {
 			Ticket selectedTicket = this.ticketTable.getSelectionModel().getSelectedItem();
 			if (!this.tickets.isEmpty()) {
@@ -191,7 +191,7 @@ public class TicketController implements Initializable {
 	 * @param event the event
 	 */
 	@FXML
-	void handleRemoveTicket(ActionEvent event) {
+	private void handleRemoveTicket(ActionEvent event) {
 		int selectedID = this.ticketTable.getSelectionModel().getSelectedIndex();
 		if (selectedID == -1) {
 			return;
@@ -206,35 +206,33 @@ public class TicketController implements Initializable {
 			failureAlert.showAndWait();
 		}
 		this.tickets.remove(removedTicket);
-	    this.ticketTable.getItems().remove(removedTicket);
+		this.ticketTable.getItems().remove(removedTicket);
 	}
-	
+
 	/**
 	 * Handle search ticket.
 	 *
 	 */
 	@FXML
-	void searchTicket() {
+	private void searchTicket() {
 		this.filteredTickets = new FilteredList<>(this.tickets, b -> true);
-		searchTickets.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredTickets.setPredicate(ticket -> {
+		this.searchTickets.textProperty().addListener((observable, oldValue, newValue) -> {
+			this.filteredTickets.setPredicate(ticket -> {
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
 				}
 				String lowerCaseFilter = newValue.toLowerCase();
-				if (ticket.getIssueName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+				if ((ticket.getIssueName().toLowerCase().indexOf(lowerCaseFilter) != -1)
+						|| (ticket.getParentProject().toString().toLowerCase().indexOf(lowerCaseFilter) != -1)) {
 					return true;
 				}
-				else {
-					return false;
-				}
+				return false;
 			});
 		});
-		SortedList<Ticket> sorted = new SortedList<>(filteredTickets);
-		sorted.comparatorProperty().bind(ticketTable.comparatorProperty());
-		ticketTable.setItems(sorted);
+		SortedList<Ticket> sorted = new SortedList<>(this.filteredTickets);
+		sorted.comparatorProperty().bind(this.ticketTable.comparatorProperty());
+		this.ticketTable.setItems(sorted);
 	}
-	
 
 	/**
 	 * Takes the user back to the homepage.
@@ -254,14 +252,5 @@ public class TicketController implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Pass ticket.
-	 *
-	 * @return the ticket
-	 */
-	public Ticket passTicket() {
-		return this.ticketTable.getSelectionModel().getSelectedItem();
 	}
 }

@@ -38,61 +38,61 @@ public class ProjectController implements Initializable {
 	/** The stage. */
 	@FXML
 	private Stage stage;
-	
+
 	/** The scene. */
 	private Scene scene;
-	
+
 	/** The root. */
 	private Parent root;
-	
+
 	/** The project table. */
 	@FXML
 	private TableView<Project> projectTable;
-	
+
 	/** The project date. */
 	@FXML
 	private TableColumn<Project, Date> projectDate;
-	
+
 	/** The project description. */
 	@FXML
 	private TableColumn<Project, String> projectDescription;
-	
+
 	/** The project name. */
 	@FXML
 	private TableColumn<Project, String> projectName;
-	
+
 	/** The project name field. */
 	@FXML
 	private TextField projectNameField;
-	
+
 	/** The project date field. */
 	@FXML
 	private DatePicker projectDateField;
-	
+
 	/** The project description field. */
 	@FXML
 	private TextArea projectDescriptionField;
-	
+
 	/** The project search field. */
 	@FXML
 	private TextField searchProjects;
-	
+
 	/** The projects. */
 	private ObservableList<Project> projects = FXCollections.observableArrayList();
-	
+
 	/** The searched projects. */
 	private FilteredList<Project> filteredProjects;
 
 	/**
 	 * Initialize the "Create Project" page.
 	 *
-	 * @param url the url of the page
+	 * @param url      the url of the page
 	 * @param resource the resource bundles required.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resource) {
-		updateTable();
-		searchProject();
+		this.updateTable();
+		this.searchProject();
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class ProjectController implements Initializable {
 		this.projectNameField.clear();
 		this.projectDateField.setValue(LocalDate.now());
 		this.projectDescriptionField.clear();
-		
+
 		if (DataModel.getInstance().addProjectToDB(project) < 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
@@ -128,7 +128,7 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to add " + project.getName());
 			failureAlert.showAndWait();
 		}
-		updateTable();
+		this.updateTable();
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ProjectController implements Initializable {
 		if (selectedID == -1) {
 			return;
 		}
-		
+
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
 		this.projects.remove(removedProject);
 		if (DataModel.getInstance().removeProjectFromDB(removedProject) < 0) {
@@ -152,18 +152,17 @@ public class ProjectController implements Initializable {
 			failureAlert.setContentText("Failed to remove " + removedProject.getName());
 			failureAlert.showAndWait();
 		}
-		updateTable();
+		this.updateTable();
 	}
-	
+
 	/**
-	 * Searches projects table
-	 *
+	 * Searches projects table.
 	 */
 	@FXML
-	void searchProject() {
+	private void searchProject() {
 		this.filteredProjects = new FilteredList<>(this.projects, b -> true);
-		searchProjects.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredProjects.setPredicate(project -> {
+		this.searchProjects.textProperty().addListener((observable, oldValue, newValue) -> {
+			this.filteredProjects.setPredicate(project -> {
 				if (newValue == null || newValue.isEmpty()) {
 					return true;
 				}
@@ -171,22 +170,19 @@ public class ProjectController implements Initializable {
 				if (project.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true;
 				}
-				else {
-					return false;
-				}
+				return false;
 			});
 		});
-		SortedList<Project> sorted = new SortedList<>(filteredProjects);
-		sorted.comparatorProperty().bind(projectTable.comparatorProperty());
-		projectTable.setItems(sorted);
+		SortedList<Project> sorted = new SortedList<>(this.filteredProjects);
+		sorted.comparatorProperty().bind(this.projectTable.comparatorProperty());
+		this.projectTable.setItems(sorted);
 	}
-	
+
 	/**
-	 * Updates projects table
-	 *
+	 * Updates projects table.
 	 */
 	@FXML
-	void updateTable() {
+	private void updateTable() {
 		this.projectName.setCellValueFactory(new PropertyValueFactory<Project, String>("name"));
 		this.projectDate.setCellValueFactory(new PropertyValueFactory<Project, Date>("date"));
 		this.projectDescription.setCellValueFactory(new PropertyValueFactory<Project, String>("description"));
@@ -198,7 +194,6 @@ public class ProjectController implements Initializable {
 		this.projectTable.setItems(this.projects);
 	}
 
-	
 	/**
 	 * Takes the user back to the homepage.
 	 *
@@ -218,6 +213,4 @@ public class ProjectController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
-	
 }
