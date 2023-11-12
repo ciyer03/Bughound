@@ -143,6 +143,7 @@ public class TicketController implements Initializable {
 		this.ticketTable.setItems(this.tickets);
 		this.bugNameField.clear();
 		this.bugDescriptionField.clear();
+		this.searchTicket();
 	}
 
 	/**
@@ -183,6 +184,7 @@ public class TicketController implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.updateFilteredTickets();
 	}
 
 	/**
@@ -207,6 +209,15 @@ public class TicketController implements Initializable {
 		}
 		this.tickets.remove(removedTicket);
 		this.ticketTable.getItems().remove(removedTicket);
+		this.updateFilteredTickets();
+	}
+
+	/**
+	 * Update filtered tickets.
+	 */
+	private void updateFilteredTickets() {
+		this.filteredTickets = new FilteredList<>(this.tickets, b -> true);
+		this.searchTicket();
 	}
 
 	/**
@@ -215,23 +226,25 @@ public class TicketController implements Initializable {
 	 */
 	@FXML
 	private void searchTicket() {
-		this.filteredTickets = new FilteredList<>(this.tickets, b -> true);
-		this.searchTickets.textProperty().addListener((observable, oldValue, newValue) -> {
-			this.filteredTickets.setPredicate(ticket -> {
-				if (newValue == null || newValue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newValue.toLowerCase();
-				if ((ticket.getIssueName().toLowerCase().indexOf(lowerCaseFilter) != -1)
-						|| (ticket.getParentProject().toString().toLowerCase().indexOf(lowerCaseFilter) != -1)) {
-					return true;
-				}
-				return false;
+		if (!(this.tickets.isEmpty())) {
+			this.filteredTickets = new FilteredList<>(this.tickets, b -> true);
+			this.searchTickets.textProperty().addListener((observable, oldValue, newValue) -> {
+				this.filteredTickets.setPredicate(ticket -> {
+					if (newValue == null || newValue.isEmpty()) {
+						return true;
+					}
+					String lowerCaseFilter = newValue.toLowerCase();
+					if ((ticket.getIssueName().toLowerCase().indexOf(lowerCaseFilter) != -1)
+							|| (ticket.getParentProject().toString().toLowerCase().indexOf(lowerCaseFilter) != -1)) {
+						return true;
+					}
+					return false;
+				});
 			});
-		});
-		SortedList<Ticket> sorted = new SortedList<>(this.filteredTickets);
-		sorted.comparatorProperty().bind(this.ticketTable.comparatorProperty());
-		this.ticketTable.setItems(sorted);
+			SortedList<Ticket> sorted = new SortedList<>(this.filteredTickets);
+			sorted.comparatorProperty().bind(this.ticketTable.comparatorProperty());
+			this.ticketTable.setItems(sorted);
+		}
 	}
 
 	/**

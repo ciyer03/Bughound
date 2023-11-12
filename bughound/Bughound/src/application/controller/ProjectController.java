@@ -129,6 +129,7 @@ public class ProjectController implements Initializable {
 			failureAlert.showAndWait();
 		}
 		this.updateTable();
+		this.updateFilteredProjects();
 	}
 
 	/**
@@ -153,6 +154,15 @@ public class ProjectController implements Initializable {
 			failureAlert.showAndWait();
 		}
 		this.updateTable();
+		this.updateFilteredProjects();
+	}
+
+	/**
+	 * Update filtered projects.
+	 */
+	private void updateFilteredProjects() {
+		this.filteredProjects = new FilteredList<>(this.projects, b -> true);
+		this.searchProject();
 	}
 
 	/**
@@ -160,22 +170,24 @@ public class ProjectController implements Initializable {
 	 */
 	@FXML
 	private void searchProject() {
-		this.filteredProjects = new FilteredList<>(this.projects, b -> true);
-		this.searchProjects.textProperty().addListener((observable, oldValue, newValue) -> {
-			this.filteredProjects.setPredicate(project -> {
-				if (newValue == null || newValue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newValue.toLowerCase();
-				if (project.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-					return true;
-				}
-				return false;
+		if (!(this.projects.isEmpty())) {
+			this.filteredProjects = new FilteredList<>(this.projects, b -> true);
+			this.searchProjects.textProperty().addListener((observable, oldValue, newValue) -> {
+				this.filteredProjects.setPredicate(project -> {
+					if (newValue == null || newValue.isEmpty()) {
+						return true;
+					}
+					String lowerCaseFilter = newValue.toLowerCase();
+					if (project.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+						return true;
+					}
+					return false;
+				});
 			});
-		});
-		SortedList<Project> sorted = new SortedList<>(this.filteredProjects);
-		sorted.comparatorProperty().bind(this.projectTable.comparatorProperty());
-		this.projectTable.setItems(sorted);
+			SortedList<Project> sorted = new SortedList<>(this.filteredProjects);
+			sorted.comparatorProperty().bind(this.projectTable.comparatorProperty());
+			this.projectTable.setItems(sorted);
+		}
 	}
 
 	/**
