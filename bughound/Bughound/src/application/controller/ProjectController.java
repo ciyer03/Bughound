@@ -225,4 +225,38 @@ public class ProjectController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Takes the user to edit a project
+	 *
+	 * @param event the event that should occur.
+	 */
+	@FXML 
+	private void handleEdit(ActionEvent event) {
+		try {
+			Project selectedProject = this.projectTable.getSelectionModel().getSelectedItem();
+			if (!this.projects.isEmpty()) {
+				if (selectedProject == null) {
+					Alert failureAlert = new Alert(AlertType.ERROR);
+					failureAlert.setTitle("Failure");
+					failureAlert.setHeaderText(null);
+					failureAlert.setContentText("Please select a Project to edit first");
+					failureAlert.showAndWait();
+					return;
+				}
+			}
+			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/EditProject.fxml"));
+	        this.root = loader.load();
+	        EditProjectController editProjectController = loader.getController();
+	        editProjectController.setInfo(selectedProject);
+			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			this.scene = new Scene(this.root);
+			this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+			this.stage.setScene(this.scene);
+			this.stage.show();
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
