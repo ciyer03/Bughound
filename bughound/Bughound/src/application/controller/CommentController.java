@@ -91,7 +91,7 @@ public class CommentController implements Initializable {
 	 * @param event the event
 	 */
 	@FXML
-	void handleSubmitComment(ActionEvent event) {
+	private void handleSubmitComment(ActionEvent event) {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Missing Input");
 		alert.setHeaderText(null);
@@ -105,7 +105,7 @@ public class CommentController implements Initializable {
 		Comment comment = new Comment(this.selectedTicket, this.commentDescriptionField.getText(), LocalDateTime.now());
 		this.comments.add(comment);
 
-		if (DataModel.getInstance().addCommentToDB(comment) < 0) {
+		if (DataModel.getInstance().addCommentToDB(comment) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);
@@ -125,7 +125,7 @@ public class CommentController implements Initializable {
 	 * @param event the event
 	 */
 	@FXML
-	void handleRemoveComment(ActionEvent event) {
+	private void handleRemoveComment(ActionEvent event) {
 		int selectedID = this.commentTable.getSelectionModel().getSelectedIndex();
 		if (selectedID == -1) {
 			return;
@@ -133,7 +133,7 @@ public class CommentController implements Initializable {
 		Comment removedComment = this.commentTable.getItems().remove(selectedID);
 		DataModel.getInstance().getComments(removedComment.getParentTicket()).remove(removedComment);
 		this.comments.remove(removedComment);
-		if (DataModel.getInstance().removeCommentFromDB(removedComment) < 0) {
+		if (DataModel.getInstance().removeCommentFromDB(removedComment) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);

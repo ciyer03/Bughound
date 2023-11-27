@@ -438,6 +438,49 @@ public class ProjectDatabase {
 	}
 
 	/**
+	 * Edits the selectedProject with details from editedProject.
+	 *
+	 * @param selectedProject the selected project to be edited
+	 * @param editedProject   the edited project whose values are to be set to
+	 *                        selectedProject
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	public int editProject(Project selectedProject, Project editedProject) {
+		this.openConnection(); // Open the connection to the database.
+		PreparedStatement sm = null;
+		int status = 0;
+
+		try {
+			// Criterion for the data to be updated from the database.
+			String updateProject = "UPDATE projects SET name = ?, date = ?, description = ? WHERE id = ?";
+
+			// Set values for the database.
+			sm = this.connection.prepareStatement(updateProject); // Prepare to insert.
+			sm.setString(1, editedProject.getName());
+			sm.setString(2, editedProject.getDate().toString());
+			sm.setString(3, editedProject.getDescription());
+			sm.setInt(4, this.getProjectID(selectedProject));
+
+			status = sm.executeUpdate(); // Update the selectedProject with details from editedProject
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.closeConnection();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+					this.closeConnection(); // Close the connection to the database if there's an error.
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				this.closeConnection(); // Close the connection to the database if there's an error.
+			}
+		}
+		return status;
+	}
+
+	/**
 	 * Gets the project ID.
 	 *
 	 * @param project the Project whose ID to fetch

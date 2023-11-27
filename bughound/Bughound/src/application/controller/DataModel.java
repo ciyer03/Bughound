@@ -11,22 +11,25 @@ import javafx.collections.ObservableList;
  * Tracks and keeps a record of created projects.
  */
 public class DataModel {
-	
+
 	/** The Constant instance. */
 	private static final DataModel instance = new DataModel();
-	
+
 	/** The projects. */
 	private ObservableList<Project> projects;
-	
+
 	/** The tickets. */
 	private ObservableList<Ticket> tickets;
-	
+
 	/** The comments. */
 	private ObservableList<Comment> comments;
-	
+
+	/** The selected project. */
+	private Project selectedProject;
+
 	/** The selected ticket. */
 	private Ticket selectedTicket;
-	
+
 	/** The db. */
 	private ProjectDatabase db;
 
@@ -117,6 +120,19 @@ public class DataModel {
 	}
 
 	/**
+	 * Update selectedProject's value to those in editedProject.
+	 *
+	 * @param selectedProject the selected project to be edited
+	 * @param editedProject   the edited project whose values are to be set to
+	 *                        selectedProject
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	public int updateProjectInDB(Project selectedProject, Project editedProject) {
+		return this.db.editProject(selectedProject, editedProject);
+	}
+
+	/**
 	 * Returns the projects currently stored in the databases.
 	 *
 	 * @return the projects currently stored in the databases.
@@ -146,6 +162,24 @@ public class DataModel {
 	public ObservableList<Comment> getComments(Ticket parentTicket) {
 		this.comments = FXCollections.observableArrayList(this.db.getComments(parentTicket));
 		return this.comments;
+	}
+
+	/**
+	 * Gets the selected project.
+	 *
+	 * @return the selected project
+	 */
+	public Project getSelectedProject() {
+		return this.selectedProject;
+	}
+
+	/**
+	 * Sets the selected project.
+	 *
+	 * @param selectedProject the new selected project
+	 */
+	public void setSelectedProject(Project selectedProject) {
+		this.selectedProject = selectedProject;
 	}
 
 	/**

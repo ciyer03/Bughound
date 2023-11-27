@@ -121,7 +121,7 @@ public class ProjectController implements Initializable {
 		this.projectDateField.setValue(LocalDate.now());
 		this.projectDescriptionField.clear();
 
-		if (DataModel.getInstance().addProjectToDB(project) < 0) {
+		if (DataModel.getInstance().addProjectToDB(project) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);
@@ -146,7 +146,7 @@ public class ProjectController implements Initializable {
 
 		Project removedProject = DataModel.getInstance().getProjects().remove(selectedID);
 		this.projects.remove(removedProject);
-		if (DataModel.getInstance().removeProjectFromDB(removedProject) < 0) {
+		if (DataModel.getInstance().removeProjectFromDB(removedProject) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);
@@ -225,13 +225,13 @@ public class ProjectController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Takes the user to edit a project
+	 * Takes the user to edit a project.
 	 *
 	 * @param event the event that should occur.
 	 */
-	@FXML 
+	@FXML
 	private void handleEdit(ActionEvent event) {
 		try {
 			Project selectedProject = this.projectTable.getSelectionModel().getSelectedItem();
@@ -244,17 +244,19 @@ public class ProjectController implements Initializable {
 					failureAlert.showAndWait();
 					return;
 				}
+
+				FXMLLoader loader = new FXMLLoader(
+						this.getClass().getClassLoader().getResource("view/EditProject.fxml"));
+				this.root = loader.load();
+				DataModel.getInstance().setSelectedProject(selectedProject);
+				EditProjectController editProjectController = loader.getController();
+				editProjectController.setInfo();
+				this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				this.scene = new Scene(this.root);
+				this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+				this.stage.setScene(this.scene);
+				this.stage.show();
 			}
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/EditProject.fxml"));
-	        this.root = loader.load();
-	        EditProjectController editProjectController = loader.getController();
-	        editProjectController.setInfo(selectedProject);
-			this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			this.scene = new Scene(this.root);
-			this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
-			this.stage.setScene(this.scene);
-			this.stage.show();
-			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

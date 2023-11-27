@@ -131,7 +131,7 @@ public class TicketController implements Initializable {
 				this.bugDescriptionField.getText(), LocalDate.now());
 		this.tickets.add(ticket);
 
-		if (DataModel.getInstance().addTicketToDB(ticket) < 0) {
+		if (DataModel.getInstance().addTicketToDB(ticket) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);
@@ -200,7 +200,7 @@ public class TicketController implements Initializable {
 		}
 
 		Ticket removedTicket = this.ticketTable.getItems().get(selectedID);
-		if (DataModel.getInstance().removeTicketFromDB(removedTicket) < 0) {
+		if (DataModel.getInstance().removeTicketFromDB(removedTicket) <= 0) {
 			Alert failureAlert = new Alert(AlertType.ERROR);
 			failureAlert.setTitle("Failure");
 			failureAlert.setHeaderText(null);
