@@ -69,17 +69,22 @@
                   <TableColumn fx:id="bugDescription" prefWidth="173.0" text="Description" />
                </columns>
             </TableView>
-            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleAddComment" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Open" textFill="WHITE">
+            <Button layoutX="453.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleAddComment" prefHeight="42.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Comments" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="658.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleRemoveTicket" prefHeight="42.0" prefWidth="205.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Remove" textFill="WHITE">
+            <Button layoutX="726.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleRemoveTicket" prefHeight="42.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Remove" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="12.0" />
                </font>
             </Button>
             <TextField fx:id="searchTickets" layoutX="453.0" layoutY="5.0" prefHeight="36.0" prefWidth="410.0" promptText="Search for tickets by name " />
+            <Button layoutX="590.0" layoutY="443.0" mnemonicParsing="false" onAction="#handleEditTicket" prefHeight="42.0" prefWidth="137.0" style="-fx-background-color: transparent; -fx-border-color: white;" text="Edit" textFill="WHITE">
+               <font>
+                  <Font name="Consolas" size="12.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

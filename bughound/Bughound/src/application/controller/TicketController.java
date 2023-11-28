@@ -246,6 +246,42 @@ public class TicketController implements Initializable {
 			this.ticketTable.setItems(sorted);
 		}
 	}
+	
+	/**
+	 * Takes the user to edit ticket page
+	 *
+	 * @param event the event that should occur.
+	 */
+	@FXML
+	private void handleEditTicket(ActionEvent event) {
+		try {
+			Ticket selectedTicket = this.ticketTable.getSelectionModel().getSelectedItem();
+			if (!this.tickets.isEmpty()) {
+				if (selectedTicket == null) {
+					Alert failureAlert = new Alert(AlertType.ERROR);
+					failureAlert.setTitle("Failure");
+					failureAlert.setHeaderText(null);
+					failureAlert.setContentText("Please select a Ticket to edit first");
+					failureAlert.showAndWait();
+					return;
+				}
+
+				FXMLLoader loader = new FXMLLoader(
+						this.getClass().getClassLoader().getResource("view/EditTicket.fxml"));
+				this.root = loader.load();
+				DataModel.getInstance().setTicket(selectedTicket);
+				EditTicketController editTicketController = loader.getController();
+				editTicketController.setTicketInfo();	
+				this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				this.scene = new Scene(this.root);
+				this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+				this.stage.setScene(this.scene);
+				this.stage.show();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Takes the user back to the homepage.
