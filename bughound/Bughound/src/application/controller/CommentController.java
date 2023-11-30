@@ -70,7 +70,7 @@ public class CommentController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.selectedTicket = DataModel.getInstance().getTicket();
+		this.selectedTicket = DataModel.getInstance().getSelectedTicket();
 		this.timeStamp.setCellValueFactory(new PropertyValueFactory<Comment, LocalDateTime>("timestamp"));
 		this.commentDescription.setCellValueFactory(new PropertyValueFactory<Comment, String>("description"));
 		VBox customPlaceholder = new VBox(new Label("No existing comments for this ticket"));

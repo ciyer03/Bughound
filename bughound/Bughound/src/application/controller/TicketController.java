@@ -164,7 +164,7 @@ public class TicketController implements Initializable {
 					failureAlert.showAndWait();
 					return;
 				}
-				DataModel.getInstance().setTicket(selectedTicket);
+				DataModel.getInstance().setSelectedTicket(selectedTicket);
 				this.root = FXMLLoader.load(this.getClass().getClassLoader().getResource("view/Comment.fxml"));
 
 				this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -269,7 +269,7 @@ public class TicketController implements Initializable {
 				FXMLLoader loader = new FXMLLoader(
 						this.getClass().getClassLoader().getResource("view/EditTicket.fxml"));
 				this.root = loader.load();
-				DataModel.getInstance().setTicket(selectedTicket);
+				DataModel.getInstance().setSelectedTicket(selectedTicket);
 				EditTicketController editTicketController = loader.getController();
 				editTicketController.setTicketInfo();	
 				this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

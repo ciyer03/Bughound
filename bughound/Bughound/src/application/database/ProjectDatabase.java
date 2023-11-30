@@ -481,6 +481,49 @@ public class ProjectDatabase {
 	}
 
 	/**
+	 * Edits the selectedTicket with details from editedTicket.
+	 *
+	 * @param selectedTicket the selected ticket to be edited
+	 * @param editedTicket   the edited ticket whose values are to be set to
+	 *                       selectedTicket
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 **/
+	public int editTicket(Ticket selectedTicket, Ticket editedTicket) {
+		this.openConnection();
+		PreparedStatement sm = null;
+		int status = 0;
+
+		try {
+			String updateTicket = "UPDATE tickets SET issue_name = ?, date = ?, description = ? WHERE id = ? AND parent_project_id = ?";
+
+			sm = this.connection.prepareStatement(updateTicket);
+			sm.setString(1, editedTicket.getIssueName());
+			sm.setString(2, editedTicket.getDateOfCreation().toString());
+			sm.setString(3, editedTicket.getDescription());
+			sm.setInt(4, this.getTicketID(selectedTicket));
+			sm.setInt(5, this.getProjectID(selectedTicket.getParentProject()));
+
+			status = sm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.closeConnection();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+					this.openConnection();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				this.closeConnection();
+			}
+		}
+
+		return status;
+	}
+
+	/**
 	 * Gets the project ID.
 	 *
 	 * @param project the Project whose ID to fetch

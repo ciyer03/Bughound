@@ -133,6 +133,19 @@ public class DataModel {
 	}
 
 	/**
+	 * Update selectedTicket's value to those in editedTicket.
+	 *
+	 * @param selectedTicket the selected ticket to be edited
+	 * @param editedTicket   the edited ticket whose values are to be set to
+	 *                       selectedTicket
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	public int updateTicketInDB(Ticket selectedTicket, Ticket editedTicket) {
+		return this.db.editTicket(selectedTicket, editedTicket);
+	}
+
+	/**
 	 * Returns the projects currently stored in the databases.
 	 *
 	 * @return the projects currently stored in the databases.
@@ -187,7 +200,7 @@ public class DataModel {
 	 *
 	 * @return the ticket
 	 */
-	public Ticket getTicket() {
+	public Ticket getSelectedTicket() {
 		return this.selectedTicket;
 	}
 
@@ -196,7 +209,7 @@ public class DataModel {
 	 *
 	 * @param ticket the new ticket
 	 */
-	public void setTicket(Ticket ticket) {
+	public void setSelectedTicket(Ticket ticket) {
 		this.selectedTicket = ticket;
 	}
 }

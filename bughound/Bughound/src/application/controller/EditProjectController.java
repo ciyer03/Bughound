@@ -65,7 +65,7 @@ public class EditProjectController {
 	}
 
 	/**
-	 * Save edit project.
+	 * Save edited project information to the database.
 	 *
 	 * @param event the event
 	 */
