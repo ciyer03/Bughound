@@ -86,7 +86,7 @@ public class EditTicketController {
 		}
 
 		this.selectedTicket = DataModel.getInstance().getSelectedTicket();
-		Ticket editedTicket = new Ticket(this.selectedTicket.getParentProject(), this.editBugNameField.getText(),
+		Ticket editedTicket = new Ticket(this.editBugChoiceBox.getValue(), this.editBugNameField.getText(),
 				this.editBugDescriptionField.getText(), LocalDate.now());
 
 		if (DataModel.getInstance().updateTicketInDB(this.selectedTicket, editedTicket) <= 0) {

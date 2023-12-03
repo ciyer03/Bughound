@@ -495,14 +495,14 @@ public class ProjectDatabase {
 		int status = 0;
 
 		try {
-			String updateTicket = "UPDATE tickets SET issue_name = ?, date = ?, description = ? WHERE id = ? AND parent_project_id = ?";
+			String updateTicket = "UPDATE tickets SET parent_project_id = ?, issue_name = ?, date = ?, description = ? WHERE id = ?";
 
 			sm = this.connection.prepareStatement(updateTicket);
-			sm.setString(1, editedTicket.getIssueName());
-			sm.setString(2, editedTicket.getDateOfCreation().toString());
-			sm.setString(3, editedTicket.getDescription());
-			sm.setInt(4, this.getTicketID(selectedTicket));
-			sm.setInt(5, this.getProjectID(selectedTicket.getParentProject()));
+			sm.setInt(1, this.getProjectID(editedTicket.getParentProject()));
+			sm.setString(2, editedTicket.getIssueName());
+			sm.setString(3, editedTicket.getDateOfCreation().toString());
+			sm.setString(4, editedTicket.getDescription());
+			sm.setInt(5, this.getTicketID(selectedTicket));
 
 			status = sm.executeUpdate();
 		} catch (SQLException e) {
