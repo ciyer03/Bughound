@@ -1,7 +1,6 @@
 package application;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * Defines an object of Project that will be used to track bugs for different
@@ -93,17 +92,5 @@ public class Project {
 	@Override
 	public String toString() {
 		return this.getName();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-	    if (this == obj) {
-	        return true;
-	    }
-	    if (obj == null || getClass() != obj.getClass()) {
-	        return false;
-	    }
-	    Project other = (Project) obj;
-	    return Objects.equals(name, other.name);
 	}
 }

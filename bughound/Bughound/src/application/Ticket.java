@@ -1,7 +1,6 @@
 package application;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * The Class Ticket.
@@ -88,7 +87,7 @@ public class Ticket {
 	public LocalDate getDateOfCreation() {
 		return this.dateOfCreation;
 	}
-	
+
 	/**
 	 * To string.
 	 *
@@ -98,17 +97,4 @@ public class Ticket {
 	public String toString() {
 		return this.getIssueName();
 	}
-	
-	
-	@Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Ticket other = (Ticket) obj;
-        return Objects.equals(issueName, other.issueName);
-    }
 }
