@@ -29,9 +29,14 @@ public class DataModel {
 
 	/** The selected ticket. */
 	private Ticket selectedTicket;
+	
+	/** The selected comment. */
+	private Comment selectedComment;
 
 	/** The db. */
 	private ProjectDatabase db;
+	
+	
 
 	/**
 	 * Instantiates a new data model.
@@ -225,4 +230,25 @@ public class DataModel {
 	public void setSelectedTicket(Ticket ticket) {
 		this.selectedTicket = ticket;
 	}
+	
+	/**
+	 * Gets the comment.
+	 * @return 
+	 *
+	 * @return the comment
+	 */
+	public Comment getSelectedComment() {
+		return this.selectedComment;
+	}
+	
+	/**
+	 * Sets the comment.
+	 *
+	 * @param comment the comment
+	 */
+	public void setSelectedComment(Comment comment) {
+		this.selectedComment = comment;
+	}
+	
+	
 }

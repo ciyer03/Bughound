@@ -161,4 +161,39 @@ public class CommentController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Takes the user to the edit comment page
+	 *
+	 * @param event the event that should occur.
+	 */
+	@FXML
+	private void handleEditComment(ActionEvent event) {
+		try {
+			Comment selectedComment = this.commentTable.getSelectionModel().getSelectedItem();
+			if (!this.comments.isEmpty()) {
+				if (selectedComment == null) {
+					Alert failureAlert = new Alert(AlertType.ERROR);
+					failureAlert.setTitle("Failure");
+					failureAlert.setHeaderText(null);
+					failureAlert.setContentText("Please select a Comment to edit first");
+					failureAlert.showAndWait();
+					return;
+				}
+				FXMLLoader loader = new FXMLLoader(
+						this.getClass().getClassLoader().getResource("view/EditComment.fxml"));
+				this.root = loader.load();
+				DataModel.getInstance().setSelectedComment(selectedComment);
+				EditCommentController editCommentController = loader.getController();
+				editCommentController.setCommentInfo();
+				this.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				this.scene = new Scene(this.root);
+				this.scene.getStylesheets().add(this.getClass().getResource("/css/application.css").toExternalForm());
+				this.stage.setScene(this.scene);
+				this.stage.show();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
