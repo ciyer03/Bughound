@@ -183,7 +183,7 @@ public class DataModel {
 		this.tickets = FXCollections.observableList(this.db.getTickets(parentProject));
 		return this.tickets;
 	}
-
+	
 	/**
 	 * Returns the comments currently stored for the given Ticket.
 	 *

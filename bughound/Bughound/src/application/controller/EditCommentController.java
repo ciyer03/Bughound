@@ -1,6 +1,9 @@
 package application.controller;
 
 import application.Comment;
+import application.Project;
+import application.Ticket;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
 public class EditCommentController {
@@ -17,6 +21,10 @@ public class EditCommentController {
     @FXML
     private TextArea editCommentDescriptionField;
 	/** The stage. */
+    
+    @FXML
+    private ChoiceBox<Ticket> editParentTicket;
+    
 	@FXML
 	private Stage stage;
 
@@ -56,7 +64,7 @@ public class EditCommentController {
 		alert.setHeaderText(null);
 		alert.setContentText("Please fill out the required fields.");
 
-		if (this.editCommentDescriptionField.getText().isEmpty()) {
+		if (this.editCommentDescriptionField.getText().isEmpty() || this.editParentTicket.getValue() == null) {
 			alert.showAndWait();
 			return;
 		}
@@ -80,6 +88,14 @@ public class EditCommentController {
 	 */
 	public void setCommentInfo() {
 		this.selectedComment = DataModel.getInstance().getSelectedComment();
+		DataModel dataModel = DataModel.getInstance();
+		ObservableList<Project> projects = dataModel.getProjects();
+		ObservableList<Ticket> existingTickets = editParentTicket.getItems();
+		for (Project proj: projects) {
+			ObservableList<Ticket> tickets = dataModel.getTickets(proj);
+			existingTickets.addAll(tickets);
+		}
+		this.editParentTicket.setValue(this.selectedComment.getParentTicket());
 		this.editCommentDescriptionField.setText(this.selectedComment.getDescription());
 	}
 }
