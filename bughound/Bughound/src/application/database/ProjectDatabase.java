@@ -524,6 +524,47 @@ public class ProjectDatabase {
 	}
 
 	/**
+	 * Edits the selectedComment with details from editedComment.
+	 *
+	 * @param selectedComment the selected comment to be edited
+	 * @param editedComment   the edited comment whose values are to be set to
+	 *                        selectedComment
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	public int editComment(Comment selectedComment, Comment editedComment) {
+		this.openConnection();
+		PreparedStatement sm = null;
+		int status = 0;
+
+		try {
+			String updateComment = "UPDATE comments SET parent_ticket_id = ?, description = ?, date = ? WHERE id = ?";
+
+			sm = this.connection.prepareStatement(updateComment);
+			sm.setInt(1, this.getTicketID(editedComment.getParentTicket()));
+			sm.setString(2, editedComment.getDescription());
+			sm.setString(3, editedComment.getTimestamp().toString());
+			sm.setInt(4, this.getCommentID(selectedComment));
+
+			status = sm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			this.closeConnection();
+		} finally {
+			try {
+				if (sm != null) {
+					sm.close();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+				this.closeConnection();
+			}
+		}
+
+		return status;
+	}
+
+	/**
 	 * Gets the project ID.
 	 *
 	 * @param project the Project whose ID to fetch

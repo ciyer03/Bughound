@@ -146,6 +146,19 @@ public class DataModel {
 	}
 
 	/**
+	 * Update selectedComment's value to those in editedComment.
+	 *
+	 * @param selectedComment the selected comment to be edited
+	 * @param editedComment   the edited comment whose values are to be set to
+	 *                        selectedComment
+	 * @return the row count for SQL Data Manipulation Language (DML) statements or
+	 *         0 if failed.
+	 */
+	public int updateCommentInDB(Comment selectedComment, Comment editedComment) {
+		return this.db.editComment(selectedComment, editedComment);
+	}
+
+	/**
 	 * Returns the projects currently stored in the databases.
 	 *
 	 * @return the projects currently stored in the databases.
