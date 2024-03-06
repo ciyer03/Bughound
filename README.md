@@ -15,10 +15,10 @@ This project aims to be a simple, local, free, and open source bug tracking appl
 
 1. Open the directory where you exported the Runnable JAR to.
 2. Create the following structure in the directory: data/projects.sqlite (if on Mac or Linux), or data\projects.sqlite (if on Windows).
-3. Assuming that Java is already in your computer's PATH variable, run:
-	a. java -jar filename\_you\_gave.jar (on Mac. On Linux if running atop a Xorg session.)
-	b. export GDK\_BACKEND=x11; java -jar filename\_you\_gave.jar (on Linux if running in a Wayland session)
-	c. java.exe -jar filename\_you\_gave.jar (on Windows)
+3. Assuming that Java is already in your computer's PATH variable, run:  
+	a. java -jar filename\_you\_gave.jar (on Mac. On Linux if running atop a Xorg session.)  
+	b. export GDK\_BACKEND=x11; java -jar filename\_you\_gave.jar (on Linux if running in a Wayland session)  
+	c. java.exe -jar filename\_you\_gave.jar (on Windows)  
 
 ## Known Issues
 
