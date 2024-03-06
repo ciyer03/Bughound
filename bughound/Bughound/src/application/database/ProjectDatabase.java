@@ -234,14 +234,12 @@ public class ProjectDatabase {
 				System.out.println("Failed to remove Tickets for the Project " + project.getName());
 			}
 			// Criterion for the data to be deleted from the database.
-			String removeProject = "DELETE FROM projects WHERE name = ? AND date = ? AND description = ?";
+			String removeProject = "DELETE FROM projects WHERE id = ?";
 
 			this.openConnection();
 			// Set values for the database.
 			sm = this.connection.prepareStatement(removeProject); // Prepare to insert.
-			sm.setString(1, project.getName());
-			sm.setString(2, project.getDate().toString());
-			sm.setString(3, project.getDescription());
+			sm.setInt(1, this.getProjectID(project));
 
 			status = sm.executeUpdate(); // Remove the Project with the given details from the database.
 		} catch (SQLException e) {
@@ -278,16 +276,13 @@ public class ProjectDatabase {
 				System.out.println("Failed to remove comments for Ticket " + ticket.getIssueName());
 			}
 			// Criterion for the data to be deleted from the database.
-			String removeTicket = "DELETE FROM tickets WHERE id = ? AND parent_project_id = ? AND issue_name = ? AND date = ? AND description = ?";
+			String removeTicket = "DELETE FROM tickets WHERE id = ? AND parent_project_id = ?";
 
 			this.openConnection();
 			// Set values for the database.
 			sm = this.connection.prepareStatement(removeTicket); // Prepare to insert.
 			sm.setInt(1, this.getTicketID(ticket));
 			sm.setInt(2, this.getProjectID(ticket.getParentProject()));
-			sm.setString(3, ticket.getIssueName());
-			sm.setString(4, ticket.getDateOfCreation().toString());
-			sm.setString(5, ticket.getDescription());
 
 			status = sm.executeUpdate(); // Remove the Ticket with the given details from the database.
 		} catch (SQLException e) {
@@ -321,14 +316,12 @@ public class ProjectDatabase {
 
 		try {
 			// Criterion for the data to be deleted from the database.
-			String removeComment = "DELETE FROM comments WHERE id = ? AND parent_ticket_id = ? AND description = ? AND date = ?";
+			String removeComment = "DELETE FROM comments WHERE id = ? AND parent_ticket_id = ?";
 
 			// Set values for the database.
 			sm = this.connection.prepareStatement(removeComment); // Prepare to insert.
 			sm.setInt(1, this.getCommentID(comment));
 			sm.setInt(2, this.getTicketID(comment.getParentTicket()));
-			sm.setString(3, comment.getDescription());
-			sm.setString(4, comment.getTimestamp().toString());
 
 			status = sm.executeUpdate(); // Remove the Comment with the given details from the database.
 		} catch (SQLException e) {
